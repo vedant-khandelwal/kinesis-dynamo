@@ -1,0 +1,23 @@
+service: fetch-file-and-store-in-s3
+
+
+custom:
+  bucket: test-bucky
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  stage: dev
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:PutObjectAcl
+      Resource: "arn:aws:s3:::${self:custom.bucket}/*"
+
+functions:
+  save:
+    handler: handler.save
+    environment:
+      BUCKET: ${self:custom.bucket}
